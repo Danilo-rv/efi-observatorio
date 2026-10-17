@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Observatório EFI</title>
+<meta name="description" content="Observatório do projeto Educação Financeira Infantil, IF Goiano, Campus Rio Verde">
+<meta name="theme-color" content="#0d7a62">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Observatório EFI">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ENTRADA -->
+<div class="wrap" id="auth" hidden>
+  <div class="authbox">
+    <div class="brand" style="margin-bottom:18px"><div class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h3.7a1.8 1.8 0 010 3.6h-2.4a1.8 1.8 0 000 3.6h3.9"/></svg></div><div><h1>Observatório EFI</h1><p>Educação Financeira Infantil · IF Goiano, Rio Verde</p></div></div>
+    <div class="card">
+      <p id="invBanner" class="msg ok" style="margin:0 0 12px" hidden></p>
+      <form id="authForm" class="stack" novalidate>
+        <div id="nomeWrap" hidden><label for="auN">Seu nome</label><input id="auN" autocomplete="name" maxlength="80"></div>
+        <div><label for="auE">E-mail</label><input id="auE" type="email" autocomplete="email" inputmode="email" required></div>
+        <div><label for="auP">Senha</label><input id="auP" type="password" autocomplete="current-password" minlength="8" required><p class="note" id="passHint" hidden>Mínimo de 8 caracteres.</p></div>
+        <button class="btn" type="submit" id="auBtn">Entrar</button>
+        <button class="link" type="button" id="auForgot">Esqueci minha senha</button>
+      </form>
+      <div id="auMsg" class="msg" hidden></div>
+      <p class="note" id="auNote" style="margin-top:12px">O acesso é por convite. Peça o link ao coordenador do projeto.</p>
+    </div>
+  </div>
+</div>
+
+<!-- NOVA SENHA -->
+<div class="wrap" id="recover" hidden>
+  <div class="authbox"><div class="card"><h2>Definir nova senha</h2><form id="recForm" class="stack" style="margin-top:12px"><div><label for="rcP">Nova senha</label><input id="rcP" type="password" minlength="8" autocomplete="new-password" required></div><button class="btn" type="submit">Salvar senha</button></form><div id="rcMsg" class="msg" hidden></div></div></div>
+</div>
+
+<!-- AGUARDANDO APROVAÇÃO -->
+<div class="wrap" id="pending" hidden>
+  <div class="authbox"><div class="card empty"><h3 id="pendTitle">Cadastro recebido</h3><p id="pendTxt">O administrador precisa aprovar seu acesso. Assim que isso acontecer, é só entrar de novo.</p><div class="row" style="justify-content:center;margin-top:14px"><button class="btn ghost" id="pendRefresh">Verificar de novo</button><button class="btn ghost" data-logout>Sair</button></div></div></div>
+</div>
+
+<!-- APLICATIVO -->
+<div class="wrap" id="app" hidden>
+<header class="top">
+  <div class="brand">
+    <div class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h3.7a1.8 1.8 0 010 3.6h-2.4a1.8 1.8 0 000 3.6h3.9"/></svg></div>
+    <div><h1>Observatório EFI</h1><p>Educação Financeira Infantil · IF Goiano, Rio Verde</p></div>
+  </div>
+  <div class="userchip"><span class="dot" id="syncDot"></span><span id="syncTxt"></span><span id="whoami"></span><button class="btn ghost sm" data-logout>Sair</button></div>
+</header>
+<nav><div class="tabs" role="tablist" id="tabs"></div></nav>
+<div id="banners"></div>
+
+<main>
+<section id="v-painel" hidden><div id="painelDyn"></div></section>
+
+<section id="v-campo" hidden>
+  <div class="grid g2">
+    <div class="card">
+      <h3>Oficina realizada</h3><p class="sub">Escolha onde e quando aconteceu. A seleção vale também para as fotos e vídeos.</p>
+      <form id="fSess" class="stack">
+        <div class="row"><div><label for="fS">Escola</label><select id="fS"></select></div><div><label for="fC">Turma</label><select id="fC"></select></div></div>
+        <div class="row"><div><label for="fW">Oficina</label><select id="fW"></select></div><div><label for="fD">Data</label><input type="date" id="fD"></div></div>
+        <div class="row"><div><label for="fP">Crianças presentes</label><input type="number" id="fP" min="0" inputmode="numeric"></div><div><label for="fE">Crianças na turma</label><input type="number" id="fE" min="0" inputmode="numeric"></div></div>
+        <div><label for="fN">Observações</label><textarea id="fN" placeholder="Dificuldades, destaques, ajustes para o próximo ciclo"></textarea></div>
+        <button class="btn" type="submit">Salvar presença</button>
+      </form>
+    </div>
+    <div class="card">
+      <h3>Fotos e vídeos</h3><p class="sub">Fotos são reduzidas antes do envio. Vídeos de até 50 MB. Sem internet, o envio fica na fila e segue depois.</p>
+      <div class="stack">
+        <div class="row"><label class="btn ghost" for="mCam" style="display:block;text-align:center;margin:0;cursor:pointer;padding-top:13px">Tirar foto ou vídeo</label><label class="btn ghost" for="mFile" style="display:block;text-align:center;margin:0;cursor:pointer;padding-top:13px">Escolher da galeria</label></div>
+        <input type="file" id="mCam" class="vh" accept="image/*,video/*" capture="environment"><input type="file" id="mFile" class="vh" accept="image/*,video/*" multiple>
+        <p class="note" id="mPicked">Nenhum arquivo escolhido.</p>
+        <div><label for="mCap">Legenda (opcional)</label><input type="text" id="mCap" maxlength="120" placeholder="Ex.: Mercadinho da turma, 5º A"></div>
+        <label class="chk" for="mAuth"><input type="checkbox" id="mAuth"><span>Tenho autorização de uso de imagem dos responsáveis. Sem isso, o arquivo fica guardado, mas não entra no infográfico.</span></label>
+        <button class="btn" id="mBtn" type="button">Enviar arquivos</button>
+        <p class="note" id="mNote"></p>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px"><h3>Últimas oficinas</h3><p class="sub">Registros mais recentes.</p><div id="sessList" class="scroll"></div></div>
+  <div class="card" style="margin-top:14px"><h3>Galeria</h3><p class="sub" id="galSub"></p><div id="gallery"></div></div>
+</section>
+
+<section id="v-cad" hidden>
+  <div class="seg" id="cadSeg"></div>
+  <div id="cad-escolas" hidden><div class="grid g2">
+    <div class="card wonly"><h3>Nova escola</h3><p class="sub">As escolas do projeto e o ciclo de cada uma.</p><form id="formEsc" class="stack"><div><label for="eN">Nome da escola</label><input id="eN" required maxlength="80"></div><div><label for="eC">Ciclo</label><select id="eC"><option value="1">Ciclo 1 (meses 3 a 6)</option><option value="2">Ciclo 2 (meses 7 a 10)</option></select></div><button class="btn" type="submit">Cadastrar escola</button></form></div>
+    <div class="card"><h3>Escolas</h3><div id="listEsc" class="scroll"></div></div></div></div>
+  <div id="cad-turmas" hidden><div class="grid g2">
+    <div class="card wonly"><h3>Nova turma</h3><p class="sub">Turmas de 4º e 5º anos.</p><form id="formTur" class="stack"><div><label for="tS">Escola</label><select id="tS"></select></div><div class="row"><div><label for="tN">Turma</label><input id="tN" required maxlength="30" placeholder="4º A"></div><div><label for="tA">Ano</label><select id="tA"><option value="4">4º ano</option><option value="5">5º ano</option></select></div></div><button class="btn" type="submit">Cadastrar turma</button></form></div>
+    <div class="card"><h3>Turmas</h3><div id="listTur" class="scroll"></div></div></div></div>
+  <div id="cad-criancas" hidden><div class="grid g2">
+    <div class="card wonly"><h3>Novas crianças</h3><p class="sub">Cada criança recebe um código. Não registre nome completo aqui: o código basta para as análises e protege a identidade.</p><form id="formKid" class="stack"><div class="row"><div><label for="kS">Escola</label><select id="kS"></select></div><div><label for="kC">Turma</label><select id="kC"></select></div></div><div><label for="kQ">Quantas crianças cadastrar</label><input type="number" id="kQ" min="1" max="40" value="1" inputmode="numeric"></div><label class="chk" for="kA"><input type="checkbox" id="kA"><span>Termo de consentimento dos responsáveis recolhido para estas crianças.</span></label><button class="btn" type="submit">Gerar códigos</button></form></div>
+    <div class="card"><h3>Crianças</h3><p class="sub" id="kidSub"></p><div id="listKid" class="scroll"></div></div></div></div>
+  <div id="cad-pessoas" hidden><div class="grid g2">
+    <div class="card wonly"><h3>Nova pessoa</h3><p class="sub">Professores, famílias, extensionistas, voluntários do Sicoob e demais envolvidos. Para famílias, registre o responsável que participou.</p><form id="formPes" class="stack"><div><label for="pN">Nome</label><input id="pN" required maxlength="80"></div><div class="row"><div><label for="pR">Papel</label><select id="pR"><option value="professor">Professor(a)</option><option value="familia">Família</option><option value="extensionista">Extensionista</option><option value="voluntario">Voluntário(a) Sicoob</option><option value="gestor">Gestão / Secretaria</option></select></div><div><label for="pS">Escola (opcional)</label><select id="pS"></select></div></div><label class="chk" for="pT"><input type="checkbox" id="pT"><span>Participou da formação do projeto (conta na meta M2 para professores).</span></label><button class="btn" type="submit">Cadastrar pessoa</button></form></div>
+    <div class="card"><h3>Pessoas</h3><div id="listPes" class="scroll"></div></div></div></div>
+</section>
+
+<section id="v-aval" hidden>
+  <div class="grid g2">
+    <div class="card"><h3>Pré e pós-teste</h3><p class="sub">Notas de 0 a 10 por criança. Salva ao sair do campo.</p>
+      <div class="row"><div><label for="aS">Escola</label><select id="aS"></select></div><div><label for="aC">Turma</label><select id="aC"></select></div></div>
+      <div id="avalTable" class="scroll" style="margin-top:12px"></div></div>
+    <div class="stack">
+      <div class="card"><h3>Escala de carinhas</h3><p class="sub">Toque na carinha escolhida pela criança, pelo professor ou pela família.</p>
+        <div class="stack"><div class="row"><div><label for="sSrc">Quem respondeu</label><select id="sSrc"><option value="crianca">Criança</option><option value="professor">Professor(a)</option><option value="familia">Família</option></select></div><div><label for="sS">Escola</label><select id="sS"></select></div></div><div class="faces" id="faces"></div><p class="note" id="sNote"></p></div></div>
+      <div class="card wonly"><h3>Produtos do projeto</h3><p class="sub">Meta M5: marque quando estiverem prontos.</p><div class="stack"><label class="chk" for="cfKit"><input type="checkbox" id="cfKit"><span>Kit pedagógico concluído</span></label><label class="chk" for="cfCart"><input type="checkbox" id="cfCart"><span>Cartilha concluída</span></label></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="v-analise" hidden><div id="analiseDyn"></div></section>
+
+<section id="v-info" hidden>
+  <div class="card" style="margin-bottom:14px"><div class="row" style="align-items:center"><div style="flex:3 1 260px"><h3>Infográfico executivo</h3><p class="sub" style="margin:0">Montado com os números atuais, só com dados agregados. Atualiza sozinho conforme o projeto avança.</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;flex:2 1 260px"><button class="btn" id="dlPng">Salvar imagem (PNG)</button><button class="btn ghost" id="dlSvg">SVG</button><button class="btn ghost" id="dlPdf">Imprimir ou PDF</button><button class="btn ghost" id="dlCsv1">Avaliações (CSV)</button><button class="btn ghost" id="dlCsv2">Oficinas (CSV)</button></div></div></div>
+  <div class="infowrap" id="infoBox"></div>
+  <div class="card" style="margin-top:14px"><h3>Registro fotográfico autorizado</h3><p class="sub">Somente fotos com autorização de imagem.</p><div id="infoGal"></div></div>
+</section>
+
+<section id="v-equipe" hidden>
+  <div class="card" style="margin-bottom:14px"><h3>Convidar pessoa</h3><p class="sub">Informe o e-mail e a categoria. O sistema cria um link único e você envia por e-mail ou WhatsApp. Ao abrir o link, a pessoa cria a senha e já entra com a categoria que você definiu. O convite vale por 7 dias e só funciona uma vez.</p>
+    <form id="inviteForm" class="row" style="align-items:flex-end"><div style="flex:2 1 220px"><label for="ivE">E-mail da pessoa</label><input id="ivE" type="email" required inputmode="email" autocomplete="off"></div><div><label for="ivR">Categoria</label><select id="ivR"></select></div><div style="flex:0 0 auto"><button class="btn" type="submit">Criar convite</button></div></form>
+    <div id="inviteResult" style="margin-top:12px"></div>
+    <div id="inviteList" class="scroll" style="margin-top:12px"></div></div>
+  <div class="card" id="teamCard"><h3>Equipe e acessos</h3><p class="sub">Altere a categoria ou bloqueie o acesso de quem já entrou. Administrador e coordenador gerem tudo; extensionista registra oficinas, avaliações e fotos; parceiro só consulta.</p><div id="equipeList" class="scroll"></div></div>
+</section>
+</main>
+<p class="note foot" style="margin-top:24px">Para ter um atalho como app, use "Instalar app" (Android) ou "Adicionar à Tela de Início" (iPhone).</p>
+</div>
+<div class="tip" id="tip" hidden></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
